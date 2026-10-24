@@ -6,7 +6,13 @@
   <meta name="theme-color" content="#2563eb">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>Học Hóa Từ Đầu Đến 12 - ChemMaster Mobile</title>
+  <title>Học Hóa Từ Đầu Đến 12 - ChemMaster Mobile Pro</title>
+  
+  <!-- KaTeX CSS & JS for Math and Chemical equations with auto-render -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -17,7 +23,7 @@
       <div class="logo-wrap">
         <div class="logo-icon">⚗️</div>
         <div class="logo-text">
-          <h1>Hóa Học 8 → 12</h1>
+          <h1>Hóa Học 8 → 12 Pro</h1>
           <span>Lấy gốc thần tốc & Ôn thi THPT</span>
         </div>
       </div>
@@ -26,11 +32,17 @@
       </div>
     </div>
 
+    <!-- Thanh tìm kiếm bài học nhanh -->
+    <div id="search-box-wrap" class="search-box-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-input" class="search-input" placeholder="Tìm bài học, công thức, khái niệm (este, pH, ankan...)...">
+    </div>
+
     <!-- Thanh tiến độ học tập -->
-    <div class="progress-card">
+    <div id="progress-card-wrap" class="progress-card">
       <div class="progress-header">
         <span>Tiến độ hoàn thành:</span>
-        <span id="progress-text">0/12 bài (0%)</span>
+        <span id="progress-text">0/42 bài (0%)</span>
       </div>
       <div class="progress-track">
         <div id="progress-fill" class="progress-fill"></div>
@@ -38,14 +50,15 @@
     </div>
   </header>
 
-  <!-- Filter cuộn ngang theo lớp/chặng (chỉ hiện ở tab Roadmap) -->
+  <!-- Filter cuộn ngang theo lớp/chặng (chỉ hiển thị ở tab Roadmap) -->
   <div id="filter-bar" class="filter-scroll">
-    <button class="chip active" data-filter="all">Tất cả</button>
-    <button class="chip" data-filter="stage-1">Lớp 8-9 (Mất gốc)</button>
-    <button class="chip" data-filter="stage-2">Lớp 9-10 (Kim loại & Oxi hóa khử)</button>
-    <button class="chip" data-filter="stage-3">Lớp 11 (pH & Hữu cơ)</button>
-    <button class="chip" data-filter="stage-4">Lớp 12 (Este, Amin, Polime)</button>
-    <button class="chip" data-filter="stage-5">Bí kíp Bảo toàn 12</button>
+    <button class="chip active" data-filter="all">Tất cả (42 bài)</button>
+    <button class="chip" data-filter="stage-1">Lớp 8 (Mất gốc)</button>
+    <button class="chip" data-filter="stage-2">Lớp 9 (Vô cơ & Hữu cơ)</button>
+    <button class="chip" data-filter="stage-3">Lớp 10 (Cấu tạo & Oxi hóa khử)</button>
+    <button class="chip" data-filter="stage-4">Lớp 11 (pH & Hidrocacbon)</button>
+    <button class="chip" data-filter="stage-5">Lớp 12 (Este, Amin, Kim loại)</button>
+    <button class="chip" data-filter="stage-6">Bí kíp 9+ THPT</button>
   </div>
 
   <!-- Main Views Container -->
@@ -58,26 +71,26 @@
     <!-- TAB 2: CÔNG CỤ TÍNH NHANH & BẢNG TUẦN HOÀN -->
     <section id="tab-tools" class="tab-view" style="display: none;">
       <div class="tool-section">
-        <!-- Máy tính số mol & thể tích -->
+        <!-- 1. Máy tính số mol & thể tích -->
         <div class="calc-card">
           <div class="calc-title">⚖️ Tính Số Mol & Thể Tích Khí</div>
-          <p class="calc-subtitle">Công thức: n = m / M và V = n × 22.4 (hoặc 24.79)</p>
+          <p class="calc-subtitle">Công thức: n = m / M và V = n × 22.4 (hoặc 24.79 L ở chuẩn mới)</p>
           <div class="form-group">
             <label class="form-label">Khối lượng chất tan m (gam):</label>
             <input type="number" id="calc-mass" class="form-input" placeholder="Ví dụ: 5.6">
           </div>
           <div class="form-group">
             <label class="form-label">Khối lượng mol M (g/mol):</label>
-            <input type="number" id="calc-molarmass" class="form-input" placeholder="Ví dụ: 56 (Sắt Fe)">
+            <input type="number" id="calc-molarmass" class="form-input" placeholder="Ví dụ: 56 (Sắt Fe), 32 (Oxi O2)...">
           </div>
-          <button id="calc-btn-mol" class="btn-primary" style="width: 100%;">⚡ Tính Ngay</button>
+          <button id="calc-btn-mol" class="btn-primary" style="width: 100%;">⚡ Tính Mol & Thể Tích</button>
           <div id="calc-result-mol" class="calc-result" style="display:none;"></div>
         </div>
 
-        <!-- Máy tính nồng độ mol CM -->
+        <!-- 2. Máy tính nồng độ mol CM -->
         <div class="calc-card">
           <div class="calc-title">🧪 Tính Nồng Độ Mol (CM)</div>
-          <p class="calc-subtitle">Công thức: CM = n / V (lít)</p>
+          <p class="calc-subtitle">Công thức: CM = n / V(lít)</p>
           <div class="form-group">
             <label class="form-label">Số mol chất tan n (mol):</label>
             <input type="number" id="calc-cm-n" class="form-input" placeholder="Ví dụ: 0.2">
@@ -86,14 +99,42 @@
             <label class="form-label">Thể tích dung dịch (ml):</label>
             <input type="number" id="calc-cm-v" class="form-input" placeholder="Ví dụ: 500">
           </div>
-          <button id="calc-btn-cm" class="btn-primary" style="width: 100%;">⚡ Tính CM</button>
+          <button id="calc-btn-cm" class="btn-primary" style="width: 100%;">⚡ Tính Nồng Độ CM</button>
           <div id="calc-result-cm" class="calc-result" style="display:none;"></div>
         </div>
 
-        <!-- Bảng tuần hoàn bỏ túi -->
+        <!-- 3. Máy tính nồng độ phần trăm C% -->
+        <div class="calc-card">
+          <div class="calc-title">📊 Tính Nồng Độ Phần Trăm (C%)</div>
+          <p class="calc-subtitle">Công thức: C% = (m_ct / m_dd) × 100%</p>
+          <div class="form-group">
+            <label class="form-label">Khối lượng chất tan m_ct (gam):</label>
+            <input type="number" id="calc-cp-mct" class="form-input" placeholder="Ví dụ: 20">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Khối lượng dung dịch m_dd (gam):</label>
+            <input type="number" id="calc-cp-mdd" class="form-input" placeholder="Ví dụ: 100">
+          </div>
+          <button id="calc-btn-cp" class="btn-primary" style="width: 100%;">⚡ Tính Nồng Độ C%</button>
+          <div id="calc-result-cp" class="calc-result" style="display:none;"></div>
+        </div>
+
+        <!-- 4. Máy tính pH dung dịch -->
+        <div class="calc-card">
+          <div class="calc-title">💧 Tính Nhanh Độ pH Dung Dịch</div>
+          <p class="calc-subtitle">Công thức: pH = -log[H+] và pH + pOH = 14</p>
+          <div class="form-group">
+            <label class="form-label">Nồng độ ion [H+] (mol/lít):</label>
+            <input type="number" step="any" id="calc-h-conc" class="form-input" placeholder="Ví dụ: 0.001 hoặc 1e-4">
+          </div>
+          <button id="calc-btn-ph" class="btn-primary" style="width: 100%;">⚡ Tính pH & Môi Trường</button>
+          <div id="calc-result-ph" class="calc-result" style="display:none;"></div>
+        </div>
+
+        <!-- 5. Bảng tuần hoàn bỏ túi -->
         <div class="calc-card">
           <div class="calc-title">🔬 Bảng Tuần Hoàn Bỏ Túi</div>
-          <p class="calc-subtitle">Bấm vào từng nguyên tố để xem hóa trị, số hiệu và nguyên tử khối chi tiết.</p>
+          <p class="calc-subtitle">Chạm vào từng ô để tra cứu số hiệu Z, hóa trị và nguyên tử khối chuẩn.</p>
           <div id="element-grid" class="element-grid"></div>
         </div>
       </div>
@@ -110,25 +151,47 @@
 
       <!-- Thơ hóa trị -->
       <div class="calc-card" style="margin-bottom:14px;">
-        <div class="calc-title">📜 Bài Ca Hóa Trị</div>
-        <p class="calc-subtitle">Học thuộc chỉ sau 3 lần đọc:</p>
-        <div style="font-size:13px; line-height:1.7; background:var(--bg-main); padding:12px; border-radius:8px;">
-          • <strong>Hóa trị I:</strong> H, Li, Na, K, Ag, Cl, Br, I<br>
+        <div class="calc-title">📜 Tóm Tắt Hóa Trị Các Nguyên Tố Thường Gặp</div>
+        <p class="calc-subtitle">Học thuộc nhanh các nhóm hóa trị:</p>
+        <div style="font-size:13px; line-height:1.75; background:var(--bg-main); padding:12px; border-radius:8px;">
+          • <strong>Hóa trị I:</strong> H, Li, Na, K, Ag, Cl (trong muối clorua), Br, I<br>
           • <strong>Hóa trị II:</strong> Mg, Ca, Ba, Zn, Cu, Fe, Hg, O<br>
           • <strong>Hóa trị III:</strong> Al, Fe(III), N(III), P(III)<br>
-          • <strong>Hóa trị biến đổi:</strong> Fe (II, III), Cu (I, II), C (II, IV), S (II, IV, VI)
+          • <strong>Hóa trị biến đổi:</strong> Fe (II, III), Cu (I, II), S (II, IV, VI), N (I, II, III, IV, V), C (II, IV)
         </div>
       </div>
 
       <!-- Bảng tính tan -->
       <div class="calc-card">
         <div class="calc-title">💧 Quy Tắc Tính Tan Của Muối & Bazơ</div>
-        <p class="calc-subtitle">Ghi nhớ nhanh để làm chính xác các bài kết tủa:</p>
+        <p class="calc-subtitle">Nhận biết kết tủa chuẩn xác cho mọi bài tập:</p>
         <div id="solubility-list" style="margin-top:10px;"></div>
       </div>
     </section>
 
-    <!-- TAB 4: LUYỆN TẬP TRẮC NGHIỆM -->
+    <!-- TAB 4: FLASHCARD LẬT THẺ GHI NHỚ -->
+    <section id="tab-flashcards" class="tab-view" style="display: none;">
+      <div class="calc-card" style="text-align: center; margin-bottom: 16px;">
+        <div class="calc-title" style="justify-content: center;">🃏 Flashcard Ghi Nhớ Cốt Lõi</div>
+        <p class="calc-subtitle">15 thẻ ghi nhớ phản xạ nhanh các định luật, công thức và bẫy trắc nghiệm.</p>
+        <div id="flashcard-counter" style="font-size: 13px; font-weight: 700; color: var(--primary); margin-top: 4px;">1 / 15</div>
+      </div>
+
+      <div class="flashcard-wrap">
+        <div id="flashcard-el" class="flashcard">
+          <div id="flashcard-badge" class="flashcard-badge">Câu hỏi</div>
+          <div id="flashcard-text" class="flashcard-text">Nội dung thẻ...</div>
+          <div id="flashcard-hint" class="flashcard-hint">👆 Chạm vào thẻ để xem đáp án</div>
+        </div>
+      </div>
+
+      <div class="flashcard-controls">
+        <button id="flashcard-prev" class="btn-primary" style="background-color: var(--bg-card); color: var(--text-main); border: 1px solid var(--border-color);">⬅️ Câu trước</button>
+        <button id="flashcard-next" class="btn-primary">Câu tiếp theo ➡️</button>
+      </div>
+    </section>
+
+    <!-- TAB 5: TỔNG ÔN TRẮC NGHIỆM -->
     <section id="tab-quiz" class="tab-view" style="display: none;">
       <div id="general-quiz-wrap"></div>
     </section>
@@ -144,12 +207,12 @@
       </div>
       <div id="modal-content" class="sheet-content"></div>
       <div class="sheet-footer">
-        <button id="modal-toggle-complete" class="btn-primary">Đánh dấu đã hiểu bài</button>
+        <button id="modal-toggle-complete" class="btn-primary">Đánh dấu đã hiểu bài này</button>
       </div>
     </div>
   </div>
 
-  <!-- Bottom Navigation Bar -->
+  <!-- Bottom Navigation Bar (5 tabs) -->
   <nav class="bottom-nav">
     <button class="nav-item active" data-tab="roadmap">
       <span class="nav-icon">📖</span>
@@ -163,13 +226,17 @@
       <span class="nav-icon">🔍</span>
       <span>Tra cứu</span>
     </button>
+    <button class="nav-item" data-tab="flashcards">
+      <span class="nav-icon">🃏</span>
+      <span>Ghi nhớ</span>
+    </button>
     <button class="nav-item" data-tab="quiz">
       <span class="nav-icon">✍️</span>
       <span>Luyện thi</span>
     </button>
   </nav>
 
-  <!-- Data & Script -->
+  <!-- Data & Logic Scripts -->
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
