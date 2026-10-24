@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Học Hóa Từ Đầu Đến 12 - ChemMaster Mobile</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="header-top">
+      <div class="logo-wrap">
+        <div class="logo-icon">⚗️</div>
+        <div class="logo-text">
+          <h1>Hóa Học 8 → 12</h1>
+          <span>Lấy gốc thần tốc & Ôn thi THPT</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="theme-toggle" class="btn-icon" title="Chuyển chế độ sáng/tối">🌙</button>
+      </div>
+    </div>
+
+    <!-- Thanh tiến độ học tập -->
+    <div class="progress-card">
+      <div class="progress-header">
+        <span>Tiến độ hoàn thành:</span>
+        <span id="progress-text">0/12 bài (0%)</span>
+      </div>
+      <div class="progress-track">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Filter cuộn ngang theo lớp/chặng (chỉ hiện ở tab Roadmap) -->
+  <div id="filter-bar" class="filter-scroll">
+    <button class="chip active" data-filter="all">Tất cả</button>
+    <button class="chip" data-filter="stage-1">Lớp 8-9 (Mất gốc)</button>
+    <button class="chip" data-filter="stage-2">Lớp 9-10 (Kim loại & Oxi hóa khử)</button>
+    <button class="chip" data-filter="stage-3">Lớp 11 (pH & Hữu cơ)</button>
+    <button class="chip" data-filter="stage-4">Lớp 12 (Este, Amin, Polime)</button>
+    <button class="chip" data-filter="stage-5">Bí kíp Bảo toàn 12</button>
+  </div>
+
+  <!-- Main Views Container -->
+  <main class="container">
+    <!-- TAB 1: LỘ TRÌNH HỌC TẬP -->
+    <section id="tab-roadmap" class="tab-view">
+      <div id="roadmap-list"></div>
+    </section>
+
+    <!-- TAB 2: CÔNG CỤ TÍNH NHANH & BẢNG TUẦN HOÀN -->
+    <section id="tab-tools" class="tab-view" style="display: none;">
+      <div class="tool-section">
+        <!-- Máy tính số mol & thể tích -->
+        <div class="calc-card">
+          <div class="calc-title">⚖️ Tính Số Mol & Thể Tích Khí</div>
+          <p class="calc-subtitle">Công thức: n = m / M và V = n × 22.4 (hoặc 24.79)</p>
+          <div class="form-group">
+            <label class="form-label">Khối lượng chất tan m (gam):</label>
+            <input type="number" id="calc-mass" class="form-input" placeholder="Ví dụ: 5.6">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Khối lượng mol M (g/mol):</label>
+            <input type="number" id="calc-molarmass" class="form-input" placeholder="Ví dụ: 56 (Sắt Fe)">
+          </div>
+          <button id="calc-btn-mol" class="btn-primary" style="width: 100%;">⚡ Tính Ngay</button>
+          <div id="calc-result-mol" class="calc-result" style="display:none;"></div>
+        </div>
+
+        <!-- Máy tính nồng độ mol CM -->
+        <div class="calc-card">
+          <div class="calc-title">🧪 Tính Nồng Độ Mol (CM)</div>
+          <p class="calc-subtitle">Công thức: CM = n / V (lít)</p>
+          <div class="form-group">
+            <label class="form-label">Số mol chất tan n (mol):</label>
+            <input type="number" id="calc-cm-n" class="form-input" placeholder="Ví dụ: 0.2">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Thể tích dung dịch (ml):</label>
+            <input type="number" id="calc-cm-v" class="form-input" placeholder="Ví dụ: 500">
+          </div>
+          <button id="calc-btn-cm" class="btn-primary" style="width: 100%;">⚡ Tính CM</button>
+          <div id="calc-result-cm" class="calc-result" style="display:none;"></div>
+        </div>
+
+        <!-- Bảng tuần hoàn bỏ túi -->
+        <div class="calc-card">
+          <div class="calc-title">🔬 Bảng Tuần Hoàn Bỏ Túi</div>
+          <p class="calc-subtitle">Bấm vào từng nguyên tố để xem hóa trị, số hiệu và nguyên tử khối chi tiết.</p>
+          <div id="element-grid" class="element-grid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: TRA CỨU NHANH (TÍNH TAN, KIM LOẠI, THƠ HÓA TRỊ) -->
+    <section id="tab-lookups" class="tab-view" style="display: none;">
+      <!-- Dãy hoạt động kim loại -->
+      <div class="mnemonic-banner">
+        <h4>⚡ Dãy Hoạt Động Hóa Học Của Kim Loại</h4>
+        <p><strong>K - Na - Ba - Ca - Mg - Al - Zn - Fe - Ni - Sn - Pb - (H) - Cu - Hg - Ag - Pt - Au</strong></p>
+        <p style="margin-top:6px; font-style:italic;">"Khi Nào Bạn Cần May Áo Záp Sắt Nhìn Sang Phố Hỏi Cửa Hàng Á Phi Âu"</p>
+      </div>
+
+      <!-- Thơ hóa trị -->
+      <div class="calc-card" style="margin-bottom:14px;">
+        <div class="calc-title">📜 Bài Ca Hóa Trị</div>
+        <p class="calc-subtitle">Học thuộc chỉ sau 3 lần đọc:</p>
+        <div style="font-size:13px; line-height:1.7; background:var(--bg-main); padding:12px; border-radius:8px;">
+          • <strong>Hóa trị I:</strong> H, Li, Na, K, Ag, Cl, Br, I<br>
+          • <strong>Hóa trị II:</strong> Mg, Ca, Ba, Zn, Cu, Fe, Hg, O<br>
+          • <strong>Hóa trị III:</strong> Al, Fe(III), N(III), P(III)<br>
+          • <strong>Hóa trị biến đổi:</strong> Fe (II, III), Cu (I, II), C (II, IV), S (II, IV, VI)
+        </div>
+      </div>
+
+      <!-- Bảng tính tan -->
+      <div class="calc-card">
+        <div class="calc-title">💧 Quy Tắc Tính Tan Của Muối & Bazơ</div>
+        <p class="calc-subtitle">Ghi nhớ nhanh để làm chính xác các bài kết tủa:</p>
+        <div id="solubility-list" style="margin-top:10px;"></div>
+      </div>
+    </section>
+
+    <!-- TAB 4: LUYỆN TẬP TRẮC NGHIỆM -->
+    <section id="tab-quiz" class="tab-view" style="display: none;">
+      <div id="general-quiz-wrap"></div>
+    </section>
+  </main>
+
+  <!-- Modal Chi Tiết Bài Học (Bottom Sheet) -->
+  <div id="modal-overlay" class="modal-overlay">
+    <div id="modal-sheet" class="modal-sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-header">
+        <h3 id="modal-title" class="sheet-title">Tiêu đề bài học</h3>
+        <button id="modal-close" class="btn-icon">✕</button>
+      </div>
+      <div id="modal-content" class="sheet-content"></div>
+      <div class="sheet-footer">
+        <button id="modal-toggle-complete" class="btn-primary">Đánh dấu đã hiểu bài</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-tab="roadmap">
+      <span class="nav-icon">📖</span>
+      <span>Lộ trình</span>
+    </button>
+    <button class="nav-item" data-tab="tools">
+      <span class="nav-icon">🧮</span>
+      <span>Công cụ</span>
+    </button>
+    <button class="nav-item" data-tab="lookups">
+      <span class="nav-icon">🔍</span>
+      <span>Tra cứu</span>
+    </button>
+    <button class="nav-item" data-tab="quiz">
+      <span class="nav-icon">✍️</span>
+      <span>Luyện thi</span>
+    </button>
+  </nav>
+
+  <!-- Data & Script -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
